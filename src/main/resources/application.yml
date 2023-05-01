@@ -39,6 +39,9 @@ spring:
   flyway:
     enabled: false
 
+app:
+  name: UnifiedKafkaEvents
+
 unified-kafka-events:
   enabled: true
   kafka:
@@ -56,7 +59,7 @@ unified-kafka-events:
       clean-cron: 0 0 0 ? 1/6 *
       clean-lifespan: 100
       topics:
-        events-in:
+        events-ok:
           name: Unified.Kafka.Events.in
           consumer-number: 1
 

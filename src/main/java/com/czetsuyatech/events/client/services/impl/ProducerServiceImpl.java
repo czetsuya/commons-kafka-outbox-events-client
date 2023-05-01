@@ -1,5 +1,6 @@
 package com.czetsuyatech.events.client.services.impl;
 
+import com.czetsuyatech.events.client.config.AppConfig;
 import com.czetsuyatech.events.client.services.ProducerService;
 import com.czetsuyatech.events.messaging.messages.UniEvent;
 import com.czetsuyatech.events.messaging.producers.UniEventProducer;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProducerServiceImpl implements ProducerService {
 
   private final UniEventProducer uniEventProducer;
+  private final AppConfig appConfig;
 
   @Transactional(propagation = Propagation.REQUIRED)
   @Override
@@ -31,13 +33,13 @@ public class ProducerServiceImpl implements ProducerService {
         .createdBy("SYSTEM")
         .eventType("TEST")
         .eventVersion(1)
-        .eventSource("")
+        .eventSource(appConfig.getName())
         .entityName("TEST")
         .callbackTopic(null)
         .entityData("{\"name\":\"Edward Legaspi\",\"salary\":300000,\"age\":39}")
         .description("Hello world")
         .build();
 
-    uniEventProducer.sendEvent("uc-1", null, uniEvent);
+    uniEventProducer.sendEvent("Unified.Kafka.Events.in", null, uniEvent);
   }
 }
