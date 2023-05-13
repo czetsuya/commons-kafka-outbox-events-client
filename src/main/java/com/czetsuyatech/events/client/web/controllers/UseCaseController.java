@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-public class TestController {
+public class UseCaseController {
 
   private final ProducerService producerService;
   private final AppConfig appConfig;
@@ -20,6 +20,6 @@ public class TestController {
 
     log.info("Receive uc-1 request");
 
-    producerService.sendMessage();
+    producerService.sendMessageUc1();
   }
 }

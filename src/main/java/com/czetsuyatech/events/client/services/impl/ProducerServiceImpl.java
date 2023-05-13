@@ -22,9 +22,9 @@ public class ProducerServiceImpl implements ProducerService {
 
   @Transactional(propagation = Propagation.REQUIRED)
   @Override
-  public void sendMessage() {
+  public void sendMessageUc1() {
 
-    log.debug("Performing uc-1 with null partitionKey");
+    log.debug("Performing UC-1 - Sending / Consuming Ok");
 
     UniEvent uniEvent = UniEvent.builder()
         .eventId(UUID.randomUUID().toString())
@@ -36,8 +36,8 @@ public class ProducerServiceImpl implements ProducerService {
         .eventSource(appConfig.getName())
         .entityName("TEST")
         .callbackTopic(null)
-        .entityData("{\"name\":\"Edward Legaspi\",\"salary\":300000,\"age\":39}")
-        .description("Hello world")
+        .entityData("{\"name\":\"Edward Legaspi\",\"alias\":\"czetsuya\",\"age\":39}")
+        .description("UC1 - Sending / Consuming Ok")
         .build();
 
     uniEventProducer.sendEvent("Unified.Kafka.Events.in", null, uniEvent);

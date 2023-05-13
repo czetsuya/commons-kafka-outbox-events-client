@@ -2,5 +2,5 @@ package com.czetsuyatech.events.client.services;
 
 public interface ProducerService {
 
-  void sendMessage();
+  void sendMessageUc1();
 }

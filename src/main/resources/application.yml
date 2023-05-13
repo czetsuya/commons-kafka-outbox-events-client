@@ -61,7 +61,7 @@ unified-kafka-events:
       topics:
         events-ok:
           name: Unified.Kafka.Events.in
-          consumer-number: 1
+          consumer-instance: 1
 
     outbound:
       retry-cron: 0 0/2 * ? * *
