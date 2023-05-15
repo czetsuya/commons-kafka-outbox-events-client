@@ -3,7 +3,7 @@ package com.czetsuyatech.events.client.messaging.consumers;
 import com.czetsuyatech.events.client.messaging.constants.TopicKeys;
 import com.czetsuyatech.events.config.UniAppConfig;
 import com.czetsuyatech.events.mappers.EventMapper;
-import com.czetsuyatech.events.messaging.consumers.UniEventRetryConsumer;
+import com.czetsuyatech.events.messaging.consumers.UniEventConsumer;
 import com.czetsuyatech.events.messaging.exceptions.EventFailedException;
 import com.czetsuyatech.events.messaging.exceptions.EventRetryableException;
 import com.czetsuyatech.events.messaging.messages.UniEvent;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class RetryConsumer extends UniEventRetryConsumer {
+public class KoConsumer extends UniEventConsumer {
 
   private final ObjectMapper om;
 
-  public RetryConsumer(
+  public KoConsumer(
       UniAppConfig appConfig,
       ConsumerFactory<String, String> consumerFactory,
       UniInboundEventService uniInboundEventService,
@@ -34,8 +34,18 @@ public class RetryConsumer extends UniEventRetryConsumer {
   }
 
   @Override
+  protected boolean filterEvent(UniEvent uniEvent) {
+
+    log.debug("Filtering event");
+
+    return uniEvent.getEntityName().startsWith("KO")
+        ? true
+        : false;
+  }
+
+  @Override
   protected String getTopicKey() {
-    return TopicKeys.CONSUMER_OK;
+    return TopicKeys.TOPIC_KO;
   }
 
   @Override
@@ -46,7 +56,15 @@ public class RetryConsumer extends UniEventRetryConsumer {
 
   @Override
   protected void handleMessage(UniEvent uniEvent) throws EventRetryableException, EventFailedException {
+
     log.info("Handling message={}", uniEvent);
+
+    if (uniEvent.getEntityName().equals("KO-RETRY")) {
+      throw new EventRetryableException("KO", "RETRY");
+
+    } else {
+      throw new EventFailedException("KO", "Failed");
+    }
   }
 
   @Override

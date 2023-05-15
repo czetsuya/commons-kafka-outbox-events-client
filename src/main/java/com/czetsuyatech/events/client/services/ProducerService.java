@@ -2,5 +2,7 @@ package com.czetsuyatech.events.client.services;
 
 public interface ProducerService {
 
-  void sendMessageUc1();
+  void okEvent();
+  void koEvent(String error);
+  void ignoredEvent();
 }

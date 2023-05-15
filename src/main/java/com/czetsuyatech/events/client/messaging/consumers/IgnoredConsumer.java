@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class OkConsumer extends UniEventConsumer {
+public class IgnoredConsumer extends UniEventConsumer {
 
   private final ObjectMapper om;
 
-  public OkConsumer(
+  public IgnoredConsumer(
       UniAppConfig appConfig,
       ConsumerFactory<String, String> consumerFactory,
       UniInboundEventService uniInboundEventService,
@@ -38,14 +38,14 @@ public class OkConsumer extends UniEventConsumer {
 
     log.debug("Filtering event");
 
-    return uniEvent.getEntityName().equals("OK")
+    return uniEvent.getEntityName().startsWith("XXX")
         ? true
         : false;
   }
 
   @Override
   protected String getTopicKey() {
-    return TopicKeys.TOPIC_OK;
+    return TopicKeys.TOPIC_IGNORED;
   }
 
   @Override
@@ -56,7 +56,15 @@ public class OkConsumer extends UniEventConsumer {
 
   @Override
   protected void handleMessage(UniEvent uniEvent) throws EventRetryableException, EventFailedException {
+
     log.info("Handling message={}", uniEvent);
+
+    if (uniEvent.getEntityName().equals("KO-RETRY")) {
+      throw new EventRetryableException("KO", "RETRY");
+
+    } else {
+      throw new EventFailedException("KO", "Failed");
+    }
   }
 
   @Override
