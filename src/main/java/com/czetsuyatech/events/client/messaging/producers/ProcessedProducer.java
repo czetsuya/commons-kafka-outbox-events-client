@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class OkProducer extends AbstractUniEventProducer {
+public class ProcessedProducer extends AbstractUniEventProducer {
 
-  public OkProducer(UniAppConfig appConfig,
+  public ProcessedProducer(UniAppConfig appConfig,
       UniEventProducer uniEventProducer) {
     super(appConfig, uniEventProducer);
   }
 
   @Override
   protected String getTopicKey() {
-    return TopicKeys.TOPIC_OK;
+    return TopicKeys.TOPIC_PROCESSED;
   }
 }

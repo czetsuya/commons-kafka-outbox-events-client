@@ -51,37 +51,45 @@ unified-kafka-events:
   kafka:
     bootstrap-servers: localhost:9092
     consumer-group: Lab
-    retry-delay: 60
+    retry-delay: 120
     max-retry-attempts: 5
     properties:
       version: 1
     inbound:
       retry-cron: 0 0/2 * ? * *
-      retry-chunk-size: 100
-      clean-cron: 0 0 0 ? 1/3 *
-      clean-lifespan: 30
+      retry-chunk-size: 50
+      clean-cron: 0 0 0 ? 1/6 *
+      clean-lifespan: 100
       topics:
-        ok-events:
-          name: Unified.Kafka.Events.ok
-          consumer-instance: 1
-        ko-events:
-          name: Unified.Kafka.Events.ko
-          consumer-instance: 1
-        ko-events-retry:
-          name: Unified.Kafka.Events.ko-retry
-          consumer-instance: 1
-        ignored-events:
-          name: Unified.Kafka.Events.ignored
-          consumer-instance: 1
+        events-processed:
+          name: Unified.Kafka.Event.Processed
+          consumer-number: 1
+        events-failed:
+          name: Unified.Kafka.Event.Failed
+          consumer-number: 1
+        events-ignored:
+          name: Unified.Kafka.Event.Ignored
+          consumer-number: 1
+        events-retried:
+          name: Unified.Kafka.Event.Retried
+          consumer-number: 1
+        events-retried-retry:
+          name: Unified.Kafka.Event.Retried-retry
+          consumer-number: 1
+
     outbound:
       retry-cron: 0 0/2 * ? * *
-      retry-chunk-size: 100
-      clean-cron: 0 0 0 ? 1/3 *
-      clean-lifespan: 30
+      retry-chunk-size: 50
+      clean-cron: 0 0 0 ? 1/6 *
+      clean-lifespan: 100
       topics:
-        ok-events:
-          name: Unified.Kafka.Events.ok
-        ko-events:
-          name: Unified.Kafka.Events.ko
-        ignored-events:
-          name: Unified.Kafka.Events.ignored
+        events-processed:
+          name: Unified.Kafka.Event.Processed
+        events-failed:
+          name: Unified.Kafka.Event.Failed
+        events-ignored:
+          name: Unified.Kafka.Event.Ignored
+        events-retried:
+          name: Unified.Kafka.Event.Retried
+        events-retried-retry:
+          name: Unified.Kafka.Event.Retried-retry

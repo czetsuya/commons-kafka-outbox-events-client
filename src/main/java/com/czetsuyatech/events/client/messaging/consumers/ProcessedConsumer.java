@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class IgnoredConsumer extends UniEventConsumer {
+public class ProcessedConsumer extends UniEventConsumer {
 
   private final ObjectMapper om;
 
-  public IgnoredConsumer(
+  public ProcessedConsumer(
       UniAppConfig appConfig,
       ConsumerFactory<String, String> consumerFactory,
       UniInboundEventService uniInboundEventService,
@@ -38,14 +38,14 @@ public class IgnoredConsumer extends UniEventConsumer {
 
     log.debug("Filtering event");
 
-    return uniEvent.getEntityName().startsWith("IGNORED")
+    return uniEvent.getEntityName().equals("PROCESSED")
         ? true
         : false;
   }
 
   @Override
   protected String getTopicKey() {
-    return TopicKeys.TOPIC_IGNORED;
+    return TopicKeys.TOPIC_PROCESSED;
   }
 
   @Override
@@ -56,7 +56,6 @@ public class IgnoredConsumer extends UniEventConsumer {
 
   @Override
   protected void handleMessage(UniEventDTO uniEvent) throws EventRetryableException, EventFailedException {
-
     log.info("Handling message={}", uniEvent);
   }
 

@@ -9,16 +9,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class KoProducer extends AbstractUniEventProducer {
+public class RetriedProducer extends AbstractUniEventProducer {
 
-  public KoProducer(UniAppConfig appConfig,
+  public RetriedProducer(UniAppConfig appConfig,
       UniEventProducer uniEventProducer) {
     super(appConfig, uniEventProducer);
-
   }
 
   @Override
   protected String getTopicKey() {
-    return TopicKeys.TOPIC_KO;
+    return TopicKeys.TOPIC_RETRIED;
   }
 }
