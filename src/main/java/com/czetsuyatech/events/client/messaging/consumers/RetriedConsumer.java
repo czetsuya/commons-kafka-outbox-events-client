@@ -6,7 +6,7 @@ import com.czetsuyatech.events.mappers.EventMapper;
 import com.czetsuyatech.events.messaging.consumers.UniEventConsumer;
 import com.czetsuyatech.events.messaging.exceptions.EventFailedException;
 import com.czetsuyatech.events.messaging.exceptions.EventRetryableException;
-import com.czetsuyatech.events.messaging.messages.UniEvent;
+import com.czetsuyatech.events.messaging.messages.UniEventDTO;
 import com.czetsuyatech.events.services.UniDeadLetterService;
 import com.czetsuyatech.events.services.UniInboundEventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,41 +16,50 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class OkConsumer extends UniEventConsumer {
+public class RetriedConsumer extends UniEventConsumer {
 
   private final ObjectMapper om;
 
-  public OkConsumer(UniInboundEventService uniInboundEventService, UniDeadLetterService uniDeadLetterService,
-      ConsumerFactory<String, String> consumerFactory, UniAppConfig appConfig, EventMapper eventMapper,
+  public RetriedConsumer(
+      UniAppConfig appConfig,
+      ConsumerFactory<String, String> consumerFactory,
+      UniInboundEventService uniInboundEventService,
+      UniDeadLetterService uniDeadLetterService,
+      EventMapper eventMapper,
       ObjectMapper om) {
 
-    super(uniInboundEventService, uniDeadLetterService, consumerFactory, appConfig, eventMapper);
+    super(appConfig, consumerFactory, uniInboundEventService, uniDeadLetterService, eventMapper);
 
     this.om = om;
   }
 
   @Override
-  protected boolean filterEvent(UniEvent uniEvent) {
+  protected boolean filterEvent(UniEventDTO uniEvent) {
 
     log.debug("Filtering event");
 
-    return true;
+    return uniEvent.getEntityName().startsWith("RETRIED")
+        ? true
+        : false;
   }
 
   @Override
   protected String getTopicKey() {
-    return TopicKeys.CONSUMER_OK;
+    return TopicKeys.TOPIC_RETRIED;
   }
 
   @Override
-  protected void beforeConsumeMessage() {
+  protected void preConsumeMessage() {
 
     log.debug("Before consuming the message");
   }
 
   @Override
-  protected void handleMessage(UniEvent uniEvent) throws EventRetryableException, EventFailedException {
+  protected void handleMessage(UniEventDTO uniEvent) throws EventRetryableException, EventFailedException {
+
     log.info("Handling message={}", uniEvent);
+
+    throw new EventRetryableException("KO", "RETRY");
   }
 
   @Override

@@ -1,15 +1,17 @@
 package com.czetsuyatech.events.client.services.impl;
 
 import com.czetsuyatech.events.client.config.AppConfig;
+import com.czetsuyatech.events.client.messaging.producers.FailedProducer;
+import com.czetsuyatech.events.client.messaging.producers.IgnoredProducer;
+import com.czetsuyatech.events.client.messaging.producers.ProcessedProducer;
+import com.czetsuyatech.events.client.messaging.producers.RetriedProducer;
 import com.czetsuyatech.events.client.services.ProducerService;
-import com.czetsuyatech.events.messaging.messages.UniEvent;
-import com.czetsuyatech.events.messaging.producers.UniEventProducer;
+import com.czetsuyatech.events.messaging.messages.UniEventDTO;
 import java.time.Instant;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -17,16 +19,65 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class ProducerServiceImpl implements ProducerService {
 
-  private final UniEventProducer uniEventProducer;
   private final AppConfig appConfig;
+  private final ProcessedProducer processedProducer;
+  private final FailedProducer failedProducer;
+  private final IgnoredProducer ignoredProducer;
+  private final RetriedProducer retriedProducer;
 
-  @Transactional(propagation = Propagation.REQUIRED)
+  @Transactional
   @Override
-  public void sendMessage() {
+  public void processEvent() {
 
-    log.debug("Performing uc-1 with null partitionKey");
+    log.debug("Performing UC-1 - Sending / Consuming Ok");
 
-    UniEvent uniEvent = UniEvent.builder()
+    UniEventDTO uniEvent = getEvent();
+
+    processedProducer.sendEvent(uniEvent);
+  }
+
+  @Transactional
+  @Override
+  public void failEvent() {
+
+    log.debug("Performing UC-2 - Failed event");
+
+    UniEventDTO uniEvent = getEvent();
+    uniEvent.setEntityName("FAILED");
+    uniEvent.setDescription("UC2 - Ko");
+
+    failedProducer.sendEvent(uniEvent);
+  }
+
+  @Transactional
+  @Override
+  public void ignoreEvent() {
+
+    log.debug("Performing UC-3 - Ignored event");
+
+    UniEventDTO uniEvent = getEvent();
+    uniEvent.setEntityName("XXX");
+    uniEvent.setDescription("UC3 - Ignored");
+
+    ignoredProducer.sendEvent(uniEvent);
+  }
+
+  @Transactional
+  @Override
+  public void retryEvent() {
+
+    log.debug("Performing UC-4 - Retried event");
+
+    UniEventDTO uniEvent = getEvent();
+    uniEvent.setEntityName("RETRIED");
+    uniEvent.setDescription("UC3 - Ignored");
+
+    retriedProducer.sendEvent(uniEvent);
+  }
+
+  private UniEventDTO getEvent() {
+
+    return UniEventDTO.builder()
         .eventId(UUID.randomUUID().toString())
         .parentEventId(null)
         .eventDate(Instant.now())
@@ -34,12 +85,10 @@ public class ProducerServiceImpl implements ProducerService {
         .eventType("TEST")
         .eventVersion(1)
         .eventSource(appConfig.getName())
-        .entityName("TEST")
+        .entityName("PROCESSED")
         .callbackTopic(null)
-        .entityData("{\"name\":\"Edward Legaspi\",\"salary\":300000,\"age\":39}")
-        .description("Hello world")
+        .entityData("{\"name\":\"Edward Legaspi\",\"alias\":\"czetsuya\",\"age\":39}")
+        .description("UC1 - Sending / Consuming Ok")
         .build();
-
-    uniEventProducer.sendEvent("Unified.Kafka.Events.in", null, uniEvent);
   }
 }

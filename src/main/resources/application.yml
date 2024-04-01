@@ -1,7 +1,7 @@
 logging:
   level:
     root: info
-    com.czetsuyatech: info
+    com.czetsuyatech: debug
     org.springframework: info
     org.hibernate.SQL: info
     org.hibernate.type.descriptor.sql.BasicBinder: error
@@ -37,7 +37,11 @@ spring:
     hibernate:
       ddl-auto: update
   flyway:
-    enabled: false
+    enabled: true
+    locations: classpath:db/migrations
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    url: ${spring.datasource.url}
 
 app:
   name: UnifiedKafkaEvents
@@ -47,20 +51,30 @@ unified-kafka-events:
   kafka:
     bootstrap-servers: localhost:9092
     consumer-group: Lab
-    retry-delay: 60
+    retry-delay: 120
     max-retry-attempts: 5
-
     properties:
       version: 1
-
     inbound:
       retry-cron: 0 0/2 * ? * *
       retry-chunk-size: 50
       clean-cron: 0 0 0 ? 1/6 *
       clean-lifespan: 100
       topics:
-        events-ok:
-          name: Unified.Kafka.Events.in
+        events-processed:
+          name: Unified.Kafka.Event.Processed
+          consumer-number: 1
+        events-failed:
+          name: Unified.Kafka.Event.Failed
+          consumer-number: 1
+        events-ignored:
+          name: Unified.Kafka.Event.Ignored
+          consumer-number: 1
+        events-retried:
+          name: Unified.Kafka.Event.Retried
+          consumer-number: 1
+        events-retried-retry:
+          name: Unified.Kafka.Event.Retried-retry
           consumer-number: 1
 
     outbound:
@@ -69,5 +83,13 @@ unified-kafka-events:
       clean-cron: 0 0 0 ? 1/6 *
       clean-lifespan: 100
       topics:
-        events-out:
-          name: Unified.Kafka.Events.in
+        events-processed:
+          name: Unified.Kafka.Event.Processed
+        events-failed:
+          name: Unified.Kafka.Event.Failed
+        events-ignored:
+          name: Unified.Kafka.Event.Ignored
+        events-retried:
+          name: Unified.Kafka.Event.Retried
+        events-retried-retry:
+          name: Unified.Kafka.Event.Retried-retry
