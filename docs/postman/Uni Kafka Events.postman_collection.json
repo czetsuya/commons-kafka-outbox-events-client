@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "578f28df-06b7-41bd-b79a-2b4d8fd4ec93",
+		"name": "Uni Kafka Events",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2537239"
+	},
+	"item": [
+		{
+			"name": "Processed event",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{unifiedKafkaEventURL}}/events/processed",
+					"host": [
+						"{{unifiedKafkaEventURL}}"
+					],
+					"path": [
+						"events",
+						"processed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed event",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/events/failed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events",
+						"failed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ignored event",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/events/ignored",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events",
+						"ignored"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retried event",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/events/retried",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events",
+						"retried"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
