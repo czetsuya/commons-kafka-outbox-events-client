@@ -10,7 +10,7 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.czetsuyatech.events.client</groupId>
-  <artifactId>unified-kafka-events-client</artifactId>
+  <artifactId>commons-kafka-outbox-events-client</artifactId>
   <version>LATEST-SNAPSHOT</version>
   <name>Unified Kafka Events Client</name>
 
