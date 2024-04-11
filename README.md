@@ -1,4 +1,4 @@
-# Czetsuya Tech | Commons Kafka Outbox Event
+# Czetsuya Tech | Commons/Unified Kafka Outbox Event Client
 
 A demonstration of how to use the Commons Kafka Outbox Event library in ensuring message delivery.
 
