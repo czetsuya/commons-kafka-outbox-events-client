@@ -9,7 +9,7 @@
     <version>3.0.6</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
-  <groupId>com.czetsuyatech.events</groupId>
+  <groupId>com.czetsuyatech.commons</groupId>
   <artifactId>commons-kafka-outbox-events-client</artifactId>
   <version>LATEST-SNAPSHOT</version>
   <name>Unified Kafka Events Client</name>
@@ -22,7 +22,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.czetsuyatech.events</groupId>
+      <groupId>com.czetsuyatech.commons</groupId>
       <artifactId>unified-kafka-events</artifactId>
       <version>${unified-kafka-events.version}</version>
     </dependency>
